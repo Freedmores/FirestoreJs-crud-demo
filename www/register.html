@@ -1,0 +1,230 @@
+<ons-page id="register">
+  <ons-toolbar>
+    <div class="center">Register</div>
+
+    <div class="left">
+      <ons-back-button></ons-back-button>
+    </div>
+  </ons-toolbar>
+
+  <div style="text-align: center; margin-top: 15px">
+    <p>
+      <ons-input
+        id="studentIdTxt"
+        modifier="underbar"
+        placeholder="Student ID"
+        float
+        oninput="Update(this.value,'stdId');"
+      ></ons-input>
+    </p>
+    <p>
+      <ons-input
+        id="fNameTxt"
+        modifier="underbar"
+        placeholder="First Name"
+        float
+        oninput="Update(this.value,'fname')"
+      ></ons-input>
+    </p>
+
+    <p>
+      <ons-input
+        id="lNameTxt"
+        modifier="underbar"
+        placeholder="Last Name"
+        float
+        oninput="Update(this.value,'lname')"
+      ></ons-input>
+    </p>
+
+    <p>
+      <ons-input
+        id="progTxt"
+        modifier="underbar"
+        placeholder="Programme"
+        float
+        oninput="Update(this.value,'prog')"
+      ></ons-input>
+    </p>
+
+    <p>
+      <ons-input
+        id="genderTxt"
+        modifier="underbar"
+        placeholder="Gender"
+        float
+        oninput="Update(this.value,'gender')"
+      ></ons-input>
+    </p>
+
+    <p style="margin-top: 30px">
+      <ons-button onclick="Add_Doc_WithID()" style="background-color: #168ee1"
+        >Save</ons-button
+      >
+      <ons-button
+        onclick="RetreiveData_inDocument() "
+        style="background-color: #168ee1"
+        >Select</ons-button
+      >
+      <ons-button
+        onclick="Update_Fields_inDocument()"
+        style="background-color: #168ee1"
+        >Update</ons-button
+      >
+      <ons-button onclick="Delete_Document()" style="background-color: #168ee1"
+        >Delete</ons-button
+      >
+    </p>
+  </div>
+
+  <script id="MainScript">
+    let studentId = document.getElementById("studentIdTxt");
+    let firstName = document.getElementById("fNameTxt");
+    let lastName = document.getElementById("lNameTxt");
+    let programme = document.getElementById("progTxt");
+    let gender = document.getElementById("genderTxt");
+
+    let studentIdVal = studentId.value;
+    let firstNameVal = firstName.value;
+    let lastNameVal = lastName.value;
+    let programmeVal = programme.value;
+    let genderVal = gender.value;
+
+    function RefreshValues() {
+      studentIdVal = studentId.value;
+      firstNameVal = firstName.value;
+      lastNameVal = lastName.value;
+      programmeVal = programme.value;
+      genderVal = gender.value;
+    }
+
+    function Update(val, type) {
+      if (type == "stdId") studentIdVal = val;
+      else if (type == "fname") firstNameVal = val;
+      else if (type == "lname") lastNameVal = val;
+      else if (type == "prog") programmeVal = val;
+      else if (type == "gender") genderVal = val;
+    }
+
+    function ClearFormFields() {
+      document.getElementById("studentIdTxt").value = "";
+      document.getElementById("fNameTxt").value = "";
+      document.getElementById("lNameTxt").value = "";
+      document.getElementById("progTxt").value = "";
+      document.getElementById("genderTxt").value = "";
+    }
+
+    //-------------------Cloud Firestore Configuration-------------------------
+
+    //---------------------Writing Data to Database
+    //Add Document with Auto Genarated ID
+
+    function Add_Doc_WithAutoID() {
+      cloudDB
+        .collection("Students")
+        .add({
+          StudentID: studentIdVal,
+          FirstName: firstNameVal,
+          LastName: lastNameVal,
+          Programme: programmeVal,
+          Gender: genderVal,
+        })
+        .then(function (docRef) {
+          console.log("Document written with ID", docRef.id);
+        })
+        .catch(function (error) {
+          console.error("Error adding document", error);
+        });
+    }
+    //Add Document with Custom ID
+    function Add_Doc_WithID() {
+      cloudDB
+        .collection("Students")
+        .doc(studentIdVal)
+        .set({
+          StudentID: studentIdVal,
+          FirstName: firstNameVal,
+          LastName: lastNameVal,
+          Programme: programmeVal,
+          Gender: genderVal,
+        })
+        .then(function () {
+          console.log("Document written with ID", studentIdVal);
+          //showToast();
+          ClearFormFields();
+          ons.notification.toast("Record Successfully Registered!", {
+            timeout: 2000,
+          });
+        })
+        .catch(function (error) {
+          console.error("Error adding document", error);
+        });
+    }
+
+    //Reading Data
+    //Retreive Data within a document
+    function RetreiveData_inDocument() {
+      cloudDB
+        .collection("Students")
+        .doc(studentIdVal)
+        .get()
+        .then(function (doc) {
+          if (doc.exists) {
+            firstName.value = doc.data().FirstName;
+            lastName.value = doc.data().LastName;
+            programme.value = doc.data().Programme;
+            gender.value = doc.data().Gender;
+          } else {
+            console.log("Student does not exist");
+          }
+        })
+        .catch(function (error) {
+          console.log("error", error);
+        });
+    }
+
+    //Update Document
+    function Update_Fields_inDocument() {
+      RefreshValues();
+      cloudDB
+        .collection("Students")
+        .doc(studentIdVal)
+        .update({
+          FirstName: firstNameVal,
+          LastName: lastNameVal,
+          Programme: programmeVal,
+          Gender: genderVal,
+        })
+        .then(function () {
+          console.log("Document updated with ID", studentIdVal);
+          //showToast();
+          ClearFormFields();
+          ons.notification.toast("Record Successfully Updated!", {
+            timeout: 2000,
+          });
+        })
+        .catch(function (error) {
+          console.error("Error updating document", error);
+        });
+    }
+
+    //Delete Document
+    function Delete_Document() {
+      cloudDB
+        .collection("Students")
+        .doc(studentIdVal)
+        .delete()
+        .then(function () {
+          console.log("Document deleted with ID", studentIdVal);
+          //showToast();
+          ClearFormFields();
+          ons.notification.toast("Record Successfully Deleted!", {
+            timeout: 2000,
+          });
+        })
+        .catch(function (error) {
+          console.error("Error deleting document", error);
+        });
+    }
+  </script>
+</ons-page>

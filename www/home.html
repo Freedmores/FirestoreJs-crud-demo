@@ -1,0 +1,29 @@
+<ons-page id="home">
+  <script>
+    const openMenu = () => {
+      document.querySelector("#menu").open();
+    };
+  </script>
+
+  <ons-toolbar id="home-toolbar">
+    <div class="left">
+      <ons-toolbar-button onclick="openMenu()">
+        <ons-icon icon="md-menu"></ons-icon>
+      </ons-toolbar-button>
+    </div>
+
+    <div class="center">Home</div>
+  </ons-toolbar>
+  <div
+    style="
+      text-align: center;
+      margin-top: 30%;
+      font-weight: bolder;
+      font-size: 60px;
+      font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+      color: #168ee1;
+    "
+  >
+    AWESOME
+  </div>
+</ons-page>

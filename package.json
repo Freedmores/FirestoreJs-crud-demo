@@ -1,0 +1,34 @@
+{
+  "name": "com.freed.coolapp",
+  "displayName": "CoolApp",
+  "version": "1.0.0",
+  "description": "A sample CRUD Apache Cordova application using Firestore.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "Freedmore",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "cordova-android": "^9.1.0",
+    "cordova-browser": "^6.0.0",
+    "cordova-ios": "^6.2.0",
+    "cordova-plugin-whitelist": "^1.3.4"
+  },
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-whitelist": {}
+    },
+    "platforms": [
+      "ios",
+      "browser",
+      "android"
+    ]
+  },
+  "dependencies": {
+    "onsenui": "^2.11.2"
+  }
+}
